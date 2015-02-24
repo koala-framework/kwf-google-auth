@@ -1,0 +1,15 @@
+{
+    "name": "koala-framework/kwf-google-auth",
+    "description": "Google+ Login (OAuth2 SSO) for Koala Framework",
+    "homepage": "http://www.koala-framework.org/",
+    "license": "BSD-2-Clause",
+    "require": {
+        "koala-framework/koala-framework": "> 3.8",
+        "google/apiclient": "1.0.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Kwf_GoogleAuth_": ""
+        }
+    }
+}
