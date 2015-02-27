@@ -33,7 +33,7 @@ class Kwf_GoogleAuth_Auth extends Kwf_User_Auth_Abstract implements Kwf_User_Aut
         $url = 'https://accounts.google.com/o/oauth2/auth';
         $url .= '?'.http_build_query(array(
             'scope' => 'https://www.googleapis.com/auth/userinfo.email',
-            'state'=> json_encode($state),
+            'state'=> $state,
             'redirect_uri' => $redirectBackUrl,
             'response_type' => 'code',
             'client_id' => $this->_clientId,
@@ -61,14 +61,14 @@ class Kwf_GoogleAuth_Auth extends Kwf_User_Auth_Abstract implements Kwf_User_Aut
     {
         $userData = $this->_getUserDataByParams($redirectBackUrl, $params);
         $s = new Kwf_Model_Select();
-        $s->whereEquals('google_user_id', $userData->id);
+        $s->whereEquals('google_user_id', $userData['id']);
         return $this->_model->getRow($s);
     }
 
     public function associateUserByParams(Kwf_Model_Row_Interface $user, $redirectBackUrl, array $params)
     {
         $userData = $this->_getUserDataByParams($redirectBackUrl, $params);
-        $user->google_user_id = $userData->id;
+        $user->google_user_id = $userData['id'];
         $user->save();
     }
 
