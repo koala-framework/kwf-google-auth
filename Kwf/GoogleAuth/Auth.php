@@ -1,14 +1,15 @@
 <?php
 class Kwf_GoogleAuth_Auth extends Kwf_User_Auth_Abstract implements Kwf_User_Auth_Interface_Redirect
 {
-    protected $_client;
     protected $_clientId;
     protected $_clientSecret;
+    protected $_registerRole;
 
     public function __construct(array $config, $model)
     {
         $this->_clientId = $config['clientId'];
         $this->_clientSecret = $config['clientSecret'];
+        $this->_registerRole = isset($config['registerRole']) ? $config['registerRole'] : null;
         parent::__construct($model);
     }
 
@@ -62,7 +63,17 @@ class Kwf_GoogleAuth_Auth extends Kwf_User_Auth_Abstract implements Kwf_User_Aut
         $userData = $this->_getUserDataByParams($redirectBackUrl, $params);
         $s = new Kwf_Model_Select();
         $s->whereEquals('google_user_id', $userData['id']);
-        return $this->_model->getRow($s);
+        $ret = $this->_model->getRow($s);
+        if (!$ret && $this->_registerRole) {
+            $ret = $this->_model->createUserRow($userData['email']);
+            $ret->role = $this->_registerRole;
+            $ret->google_user_id = $userData['id'];
+            $ret->firstname = $userData['firstname'];
+            $ret->lastname = $userData['lastname'];
+            if ($ret instanceof Kwf_User_EditRow) $ret->setSendMails(false); //we don't want a register mail
+            $ret->save();
+        }
+        return $ret;
     }
 
     public function associateUserByParams(Kwf_Model_Row_Interface $user, $redirectBackUrl, array $params)
