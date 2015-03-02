@@ -83,11 +83,6 @@ class Kwf_GoogleAuth_Auth extends Kwf_User_Auth_Abstract implements Kwf_User_Aut
         $user->save();
     }
 
-    public function createSampleLoginLinks($absoluteUrl)
-    {
-        return array();
-    }
-
     public function showInBackend()
     {
         return true;
