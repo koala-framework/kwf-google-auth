@@ -58,7 +58,7 @@ class Kwf_GoogleAuth_Auth extends Kwf_User_Auth_Abstract implements Kwf_User_Aut
         );
     }
 
-    public function getUserToLoginByParams($redirectBackUrl, array $params)
+    public function getUserToLoginByCallbackParams($redirectBackUrl, array $params)
     {
         $userData = $this->_getUserDataByParams($redirectBackUrl, $params);
         $s = new Kwf_Model_Select();
@@ -76,11 +76,16 @@ class Kwf_GoogleAuth_Auth extends Kwf_User_Auth_Abstract implements Kwf_User_Aut
         return $ret;
     }
 
-    public function associateUserByParams(Kwf_Model_Row_Interface $user, $redirectBackUrl, array $params)
+    public function associateUserByCallbackParams(Kwf_Model_Row_Interface $user, $redirectBackUrl, array $params)
     {
         $userData = $this->_getUserDataByParams($redirectBackUrl, $params);
         $user->google_user_id = $userData['id'];
         $user->save();
+    }
+
+    public function getUserToLoginByParams(array $params)
+    {
+        return null;
     }
 
     public function showInBackend()
