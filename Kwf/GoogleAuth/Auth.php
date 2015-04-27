@@ -111,4 +111,19 @@ class Kwf_GoogleAuth_Auth extends Kwf_User_Auth_Abstract implements Kwf_User_Aut
     {
         return true;
     }
+
+    public function isRedirectCompatibleWith(Kwf_User_Auth_Interface_Redirect $auth)
+    {
+        while ($auth instanceof Kwf_User_Auth_Proxy_Abstract || $auth instanceof Kwf_User_Auth_Union_Abstract) {
+            $auth = $auth->getInnerAuth();
+        }
+        if ($auth instanceof Kwf_GoogleAuth_Auth
+            && $this->_clientId == $auth->_clientId
+            && !$this->_registerRole
+            && !$auth->_registerRole
+        ) {
+            return true;
+        }
+        return false;
+    }
 }
